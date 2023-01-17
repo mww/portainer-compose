@@ -1,0 +1,59 @@
+version: '3'
+services:
+  server:
+    image: wallabag/wallabag:2.5.1
+    networks:
+      - server
+      - db
+    environment:
+      MYSQL_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
+      SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
+      SYMFONY__ENV__DATABASE_HOST: db
+      SYMFONY__ENV__DATABASE_PORT: 3306
+      SYMFONY__ENV__DATABASE_NAME: wallabag
+      SYMFONY__ENV__DATABASE_USER: $MARIADB_USER
+      SYMFONY__ENV__DATABASE_PASSWORD: $MARIADB_PASSWORD
+      SYMFONY__ENV__DATABASE_CHARSET: utf8mb4
+      SYMFONY__ENV__DATABASE_TABLE_PREFIX: "wallabag_"
+      SYMFONY__ENV__MAILER_TRANSPORT: smtp
+      SYMFONY__ENV__MAILER_HOST: smtp.gmail.com
+      SYMFONY__ENV__MAILER_PORT: 587
+      SYMFONY__ENV__MAILER_ENCRYPTION: tls
+      SYMFONY__ENV__MAILER_USER: $WALLABAG_MAILER_USER
+      SYMFONY__ENV__MAILER_PASSWORD: $WALLABAG_MAILER_PASSWORD
+      SYMFONY__ENV__FROM_EMAIL: $WALLABAG_FROM_EMAIL
+      SYMFONY__ENV__DOMAIN_NAME: $WALLABAG_DOMAIN_NAME
+      SYMFONY__ENV__SERVER_NAME: $WALLABAG_SERVER_NAME
+    ports:
+      - "$WALLABAG_PORT:80"
+    volumes:
+      - $WALLABAG_IMAGE_DIR:/var/www/wallabag/web/assets/images
+    healthcheck:
+      test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "http://localhost"]
+      interval: 1m
+      timeout: 3s
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: mariadb:10.9
+    networks:
+      - db
+    environment:
+      MARIADB_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
+      MARIADB_USER: $MARIADB_USER
+      MARIADB_PASSWORD: $MARIADB_PASSWORD
+    volumes:
+      - $WALLABAG_DATA_DIR:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 20s
+      timeout: 3s
+    restart: always
+
+networks:
+  db:
+    driver: bridge
+    internal: true
+  server:
+    driver: bridge
