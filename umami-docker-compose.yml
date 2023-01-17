@@ -1,0 +1,36 @@
+---
+version: '3'
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-v1.39.5
+    ports:
+      - "3000:3000"
+    networks:
+      - umami-server
+      - umami-db
+    environment:
+      DATABASE_URL: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/umami
+      DATABASE_TYPE: postgresql
+      HASH_SALT: $HASH_SALT
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: postgres:12-alpine
+    networks:
+      - umami-db
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - $POSTGRES_SQL_DIR/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
+      - $POSTGRES_DATA_DIR:/var/lib/postgresql/data
+    restart: always
+
+networks:
+  umami-db:
+    driver: bridge
+    internal: true
+  umami-server:
+    driver: bridge
