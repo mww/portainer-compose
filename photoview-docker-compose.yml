@@ -31,6 +31,7 @@ services:
       - PHOTOVIEW_DATABASE_DRIVER=mysql
       - PHOTOVIEW_MYSQL_URL=$MARIADB_USER:$MARIADB_PASSWORD@tcp(db)/photoview
       - PHOTOVIEW_LISTEN_IP=photoview
+      - PHOTOVIEW_LISTEN_PORT=4001
       - PHOTOVIEW_MEDIA_CACHE=/app/cache
       
       # Optional: If you are using Samba/CIFS-Share and experience problems with "directory not found"
