@@ -47,6 +47,10 @@ services:
     volumes:
       - $PHOTOVIEW_API_CACHE:/app/cache
       - $PHOTOVIEW_PHOTO_PATH:/photos:ro
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:4001"]
+      interval: 2m
+      timeout: 3s
     restart: always
 
 networks:
