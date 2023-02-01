@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    image: wallabag/wallabag:2.5.2
+    image: wallabag/wallabag:2.5.3
     networks:
       - server
       - db
