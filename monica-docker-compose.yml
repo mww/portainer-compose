@@ -1,0 +1,61 @@
+version: "3.4"
+
+services:
+  app:
+    image: monica:4.0.0-apache
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      - APP_KEY=$APP_KEY
+      - APP_URL=$APP_URL
+      - APP_DISABLE_SIGNUP=true
+      - APP_TRUSTED_PROXIES=$APP_TRUSTED_PROXIES
+      - HASH_SALT=$HASH_SALT
+      - HASH_LENGTH=18
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=$MYSQL_PASSWORD
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=$MAIL_USERNAME
+      - MAIL_PASSWORD=$MAIL_PASSWORD
+      - MAIL_ENCRYPTION=tls
+      - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
+      - MAIL_FROM_NAME="monica"
+    networks:
+      - db
+      - app
+    volumes:
+      - $MONICA_STORAGE:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost"]
+      interval: 2m
+      timeout: 3s
+    restart: always
+
+  db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=monica
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+    networks:
+      - db
+    volumes:
+      - $MYSQL_DATA:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2m
+      timeout: 3s
+    restart: always
+
+networks:
+  db:
+    driver: bridge
+    internal: true
+  app:
+    driver: bridge
