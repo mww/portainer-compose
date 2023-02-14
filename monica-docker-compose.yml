@@ -53,6 +53,35 @@ services:
       timeout: 3s
     restart: always
 
+  cron:
+    image: monica:4.0.0-apache
+    command: cron.sh
+    depends_on:
+      - db
+    environment:
+      - APP_KEY=$APP_KEY
+      - APP_URL=$APP_URL
+      - APP_DISABLE_SIGNUP=true
+      - APP_TRUSTED_PROXIES=$APP_TRUSTED_PROXIES
+      - HASH_SALT=$HASH_SALT
+      - HASH_LENGTH=18
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=$MYSQL_PASSWORD
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=$MAIL_USERNAME
+      - MAIL_PASSWORD=$MAIL_PASSWORD
+      - MAIL_ENCRYPTION=tls
+      - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
+      - MAIL_FROM_NAME="monica"
+    networks:
+      - db
+    volumes:
+      - $MONICA_STORAGE:/var/www/html/storage
+    restart: always
+
 networks:
   db:
     driver: bridge
