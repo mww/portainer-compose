@@ -80,6 +80,7 @@ services:
       - MAIL_FROM_NAME="monica"
     networks:
       - db
+      - app
     volumes:
       - $MONICA_STORAGE:/var/www/html/storage
     restart: always
