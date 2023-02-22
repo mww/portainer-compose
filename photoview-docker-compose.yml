@@ -33,6 +33,7 @@ services:
       - PHOTOVIEW_LISTEN_IP=photoview
       - PHOTOVIEW_LISTEN_PORT=4001
       - PHOTOVIEW_MEDIA_CACHE=/app/cache
+      - TZ=America/Los_Angeles
       
       # Optional: If you are using Samba/CIFS-Share and experience problems with "directory not found"
       # Enable the following Godebug
@@ -42,7 +43,7 @@ services:
       # Optional: To enable map related features, you need to create a mapbox token.
       # A token can be generated for free here https://account.mapbox.com/access-tokens/
       # It's a good idea to limit the scope of the token to your own domain, to prevent others from using it.
-      # - MAPBOX_TOKEN=<YOUR TOKEN HERE>
+      - MAPBOX_TOKEN=$MAPBOX_TOKEN
 
     volumes:
       - $PHOTOVIEW_API_CACHE:/app/cache
@@ -51,6 +52,27 @@ services:
       test: ["CMD", "curl", "--fail", "http://localhost:4001"]
       interval: 2m
       timeout: 3s
+    restart: always
+
+  db-backup:
+    image: tiredofit/db-backup
+    networks:
+      - db
+    volumes:
+      - $PHOTOVIEW_DB_BACKUP:/backup
+    environment:
+      - DB_TYPE=mariadb
+      - DB_HOST=db
+      - DB_NAME=photoview
+      - DB_USER=$MARIADB_USER
+      - DB_PASS=$MARIADB_PASSWORD
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0315        # backup at 3:15am
+      - DB_CLEANUP_TIME=FALSE     # don't cleanup old backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
     restart: always
 
 networks:
