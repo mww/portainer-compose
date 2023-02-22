@@ -10,6 +10,7 @@ services:
       - MARIADB_USER=$MARIADB_USER
       - MARIADB_PASSWORD=$MARIADB_PASSWORD
       - MARIADB_RANDOM_ROOT_PASSWORD=1
+      - TZ=America/Los_Angeles
     volumes:
       - $PHOTOVIEW_DATA:/var/lib/mysql
     healthcheck:
