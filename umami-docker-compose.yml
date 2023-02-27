@@ -15,6 +15,7 @@ services:
     depends_on:
       - db
     restart: always
+
   db:
     image: postgres:12-alpine
     networks:
@@ -26,6 +27,29 @@ services:
     volumes:
       - $POSTGRES_SQL_DIR/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
       - $POSTGRES_DATA_DIR:/var/lib/postgresql/data
+    restart: always
+
+  db-backup:
+    image: tiredofit/db-backup
+    networks:
+      - umami-db
+    depends_on:
+      - db
+    volumes:
+      - $UMAMI_DB_BACKUP:/backup
+    environment:
+      - DB_TYPE=pgsql
+      - DB_HOST=db
+      - DB_NAME=umami
+      - DB_USER=$POSTGRES_USER
+      - DB_PASS=$POSTGRES_PASSWORD
+      - DB_DUMP_FREQ=1440         # backup once a day
+      - DB_DUMP_BEGIN=0230        # backup at 2:30am
+      - DB_CLEANUP_TIME=43200     # clean up backups older than 30 days
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
     restart: always
 
 networks:
