@@ -36,6 +36,7 @@ services:
     depends_on:
       - db
     restart: always
+
   db:
     image: mariadb:10.9
     networks:
@@ -50,6 +51,29 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 20s
       timeout: 3s
+    restart: always
+
+  db-backup:
+    image: tiredofit/db-backup
+    networks:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - $WALLABAG_DB_BACKUP:/backup
+    environment:
+      - DB_TYPE=mariadb
+      - DB_HOST=db
+      - DB_NAME=wallabag
+      - DB_USER=$MARIADB_USER
+      - DB_PASS=$MARIADB_PASSWORD
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0330        # backup at 3:30am
+      - DB_CLEANUP_TIME=FALSE     # don't cleanup old backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
     restart: always
 
 networks:
