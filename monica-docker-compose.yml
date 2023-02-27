@@ -84,6 +84,29 @@ services:
     volumes:
       - $MONICA_STORAGE:/var/www/html/storage
     restart: always
+  
+  db-backup:
+    image: tiredofit/db-backup
+    networks:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - $MONICA_DB_BACKUP:/backup
+    environment:
+      - DB_TYPE=mariadb
+      - DB_HOST=db
+      - DB_NAME=monica
+      - DB_USER=monica
+      - DB_PASS=$MYSQL_PASSWORD
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0215        # backup at 2:15am
+      - DB_CLEANUP_TIME=FALSE     # don't cleanup old backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
+    restart: always
 
 networks:
   db:
