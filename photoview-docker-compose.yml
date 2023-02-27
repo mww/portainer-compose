@@ -59,6 +59,8 @@ services:
     image: tiredofit/db-backup
     networks:
       - db
+    depends_on:
+      - db
     volumes:
       - $PHOTOVIEW_DB_BACKUP:/backup
     environment:
