@@ -4,7 +4,7 @@ services:
   app:
     image: influxdb:2.6.1
     ports:
-      - 8086:8086
+      - $INFLUXDB_PORT:8086
     volumes:
-      - :$INFLUX_DIR/var/lib/influxdb2
+      - $INFLUXDB_DIR:/var/lib/influxdb2
     restart: always
