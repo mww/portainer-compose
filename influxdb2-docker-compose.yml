@@ -8,3 +8,25 @@ services:
     volumes:
       - $INFLUXDB_DIR:/var/lib/influxdb2
     restart: always
+  
+  db-backup:
+    image: tiredofit/db-backup
+    depends_on:
+      - app
+    volumes:
+      - $INFLUXDB_DB_BACKUP:/backup
+    environment:
+      - DB_TYPE=influx
+      - DB_HOST=http://app
+      - DB_NAME=ALL
+      - DB_USER=$INFLUXDB_ORG
+      - DB_PASS=$INFLUXDB_TOKEN
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0415        # backup at 4:15am
+      - DB_CLEANUP_TIME=100800    # keep 10 weeks of backups
+      - INFLUX_VERSION=2
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
+    restart: always
