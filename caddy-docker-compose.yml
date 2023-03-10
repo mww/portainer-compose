@@ -16,9 +16,9 @@ services:
       - $CADDY_HTTP_PORT:80
       - $CADDY_HTTPS_PORT:443
     volumes:
-      - /volume2/docker/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - /volume2/docker/caddy/data:/data
-      - /volume2/docker/caddy/config:/config
+      - $CADDY_FILE:/etc/caddy/Caddyfile
+      - $CADDY_DATA:/data
+      - $CADDY_CONFIG:/config
 
 networks:
   influxdb2_default:
