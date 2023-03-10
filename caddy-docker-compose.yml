@@ -4,6 +4,7 @@ services:
   caddy:
     image: caddy:2.6.4
     restart: unless-stopped
+    network_mode: host
     networks:
       - default
       - influxdb2_default
