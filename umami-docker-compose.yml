@@ -3,11 +3,9 @@ version: '3'
 services:
   umami:
     image: ghcr.io/umami-software/umami:postgresql-v1.40.0
-    ports:
-      - "3000:3000"
     networks:
-      - umami-server
-      - umami-db
+      - app
+      - db
     environment:
       DATABASE_URL: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/umami
       DATABASE_TYPE: postgresql
@@ -19,7 +17,7 @@ services:
   db:
     image: postgres:12-alpine
     networks:
-      - umami-db
+      - db
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: $POSTGRES_USER
@@ -32,7 +30,7 @@ services:
   db-backup:
     image: tiredofit/db-backup
     networks:
-      - umami-db
+      - db
     depends_on:
       - db
     volumes:
@@ -53,8 +51,8 @@ services:
     restart: always
 
 networks:
-  umami-db:
+  db:
     driver: bridge
     internal: true
-  umami-server:
+  app:
     driver: bridge

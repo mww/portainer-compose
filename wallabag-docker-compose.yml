@@ -3,7 +3,7 @@ services:
   server:
     image: wallabag/wallabag:2.5.4
     networks:
-      - server
+      - app
       - db
     environment:
       MYSQL_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
@@ -25,8 +25,6 @@ services:
       SYMFONY__ENV__DOMAIN_NAME: $WALLABAG_DOMAIN_NAME
       SYMFONY__ENV__SERVER_NAME: $WALLABAG_SERVER_NAME
       SYMFONY__ENV__FOSUSER_REGISTRATION: false
-    ports:
-      - "$WALLABAG_PORT:80"
     volumes:
       - $WALLABAG_IMAGE_DIR:/var/www/wallabag/web/assets/images
     healthcheck:
@@ -80,5 +78,5 @@ networks:
   db:
     driver: bridge
     internal: true
-  server:
+  app:
     driver: bridge

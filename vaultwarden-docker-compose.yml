@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.27.0-alpine
+    restart: always
+    volumes:
+      - $VAULTWARDEN_DATA:/data
+    environment:
+      - DOMAIN=$VAULTWARDEN_DOMAIN
+      - ADMIN_TOKEN=$ADMIN_TOKEN
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=false
+      - SMTP_FROM=$SMTP_FROM
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_SECURITY=starttls
+      - SMTP_USERNAME=$SMTP_USER
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - TZ=America/Los_Angeles
+
+  db-backup:
+    image: tiredofit/db-backup
+    depends_on:
+      - vaultwarden
+    volumes:
+      - $VAULTWARDEN_DB_BACKUP:/backup
+      - $VAULTWARDEN_DATA:/data:ro
+    environment:
+      - DB_TYPE=sqlite3
+      - DB_HOST=/data/db.sqlite3
+      - DB_NAME=ALL
+      - DB_DUMP_FREQ=1440         # backup once a day
+      - DB_DUMP_BEGIN=0130        # backup at 1:30am
+      - DB_CLEANUP_TIME=43200     # keep 30 days of old backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
+    restart: always

@@ -23,9 +23,7 @@ services:
     image: viktorstrate/photoview:2.3.13
     networks:
       - db
-      - server
-    ports:
-      - "$PHOTOVIEW_PORT:4001"
+      - app
     depends_on:
       - db
     environment:
@@ -82,5 +80,5 @@ networks:
   db:
     driver: bridge
     internal: true
-  server:
+  app:
     driver: bridge
