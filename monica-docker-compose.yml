@@ -25,8 +25,9 @@ services:
       - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
       - MAIL_FROM_NAME="monica"
     networks:
-      - db
-      - app
+      app:
+        ipv4_address: 10.10.2.1
+      db: null
     volumes:
       - $MONICA_STORAGE:/var/www/html/storage
     healthcheck:
@@ -43,7 +44,7 @@ services:
       - MYSQL_USER=monica
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
     networks:
-      - db
+      db: null
     volumes:
       - $MYSQL_DATA:/var/lib/mysql
     healthcheck:
@@ -77,8 +78,9 @@ services:
       - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
       - MAIL_FROM_NAME="monica"
     networks:
-      - db
-      - app
+      app:
+        ipv4_address: 10.10.2.2
+      db: null
     volumes:
       - $MONICA_STORAGE:/var/www/html/storage
     restart: always
@@ -86,7 +88,7 @@ services:
   db-backup:
     image: tiredofit/db-backup
     networks:
-      - db
+      db: null
     depends_on:
       - db
     volumes:
@@ -107,8 +109,8 @@ services:
     restart: always
 
 networks:
+  app:
+    external: true
   db:
     driver: bridge
     internal: true
-  app:
-    driver: bridge

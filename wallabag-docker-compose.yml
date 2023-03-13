@@ -3,8 +3,9 @@ services:
   server:
     image: wallabag/wallabag:2.5.4
     networks:
-      - app
-      - db
+      app:
+        ipv4_address: 10.10.6.1
+      db: null
     environment:
       MYSQL_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
       SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
@@ -38,7 +39,7 @@ services:
   db:
     image: mariadb:10.9
     networks:
-      - db
+      db: null
     environment:
       MARIADB_ROOT_PASSWORD: $MARIADB_ROOT_PASSWORD
       MARIADB_USER: $MARIADB_USER
@@ -54,7 +55,7 @@ services:
   db-backup:
     image: tiredofit/db-backup
     networks:
-      - db
+      db: null
     depends_on:
       - db
     volumes:
@@ -75,8 +76,8 @@ services:
     restart: always
 
 networks:
+  app:
+    external: true
   db:
     driver: bridge
     internal: true
-  app:
-    driver: bridge

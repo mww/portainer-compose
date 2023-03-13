@@ -3,6 +3,9 @@ version: "3.4"
 services:
   app:
     image: influxdb:2.6.1
+    networks:
+      app:
+        ipv4_address: 10.10.1.1
     volumes:
       - $INFLUXDB_DIR:/var/lib/influxdb2
     restart: always
@@ -28,3 +31,7 @@ services:
       - SPLIT_DB=FALSE
       - CONTAINER_ENABLE_MONITORING=FALSE
     restart: always
+
+networks:
+  app:
+    external: true

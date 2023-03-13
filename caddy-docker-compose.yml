@@ -4,32 +4,8 @@ services:
   caddy:
     image: caddy:2.6.4
     restart: unless-stopped
-    networks:
-      - default
-      - influxdb2_default
-      - monica_app
-      - photoview_app
-      - umami_app
-      - vaultwarden_default
-      - wallabag_app
-    ports:
-      - $CADDY_HTTP_PORT:80
-      - $CADDY_HTTPS_PORT:443
+    network_mode: host
     volumes:
-      - $CADDY_FILE:/etc/caddy/Caddyfile
+      - $CADDY_DIR:/etc/caddy:ro
       - $CADDY_DATA:/data
       - $CADDY_CONFIG:/config
-
-networks:
-  influxdb2_default:
-    external: true
-  monica_app:
-    external: true
-  photoview_app:
-    external: true
-  umami_app:
-    external: true
-  vaultwarden_default:
-    external: true
-  wallabag_app:
-    external: true

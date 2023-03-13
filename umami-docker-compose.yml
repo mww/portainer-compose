@@ -4,8 +4,9 @@ services:
   umami:
     image: ghcr.io/umami-software/umami:postgresql-v1.40.0
     networks:
-      - app
-      - db
+      app:
+        ipv4_address: 10.10.4.1
+      db: null
     environment:
       DATABASE_URL: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/umami
       DATABASE_TYPE: postgresql
@@ -17,7 +18,7 @@ services:
   db:
     image: postgres:12-alpine
     networks:
-      - db
+      db: null
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: $POSTGRES_USER
@@ -30,7 +31,7 @@ services:
   db-backup:
     image: tiredofit/db-backup
     networks:
-      - db
+      db: null
     depends_on:
       - db
     volumes:
@@ -51,8 +52,8 @@ services:
     restart: always
 
 networks:
+  app:
+    external: true
   db:
     driver: bridge
     internal: true
-  app:
-    driver: bridge

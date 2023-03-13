@@ -6,6 +6,9 @@ services:
     restart: always
     volumes:
       - $VAULTWARDEN_DATA:/data
+    networks:
+      app:
+        ipv4_address: 10.10.5.1
     environment:
       - DOMAIN=$VAULTWARDEN_DOMAIN
       - ADMIN_TOKEN=$ADMIN_TOKEN
@@ -38,3 +41,7 @@ services:
       - SPLIT_DB=FALSE
       - CONTAINER_ENABLE_MONITORING=FALSE
     restart: always
+
+networks:
+  app:
+    external: true

@@ -4,7 +4,7 @@ services:
   db:
     image: mariadb:10.5
     networks:
-      - db
+      db: null
     environment:
       - MARIADB_DATABASE=photoview
       - MARIADB_USER=$MARIADB_USER
@@ -22,8 +22,9 @@ services:
   photoview:
     image: viktorstrate/photoview:2.3.13
     networks:
-      - db
-      - app
+      app:
+        ipv4_address: 10.10.3.1
+      db: null
     depends_on:
       - db
     environment:
@@ -56,7 +57,7 @@ services:
   db-backup:
     image: tiredofit/db-backup
     networks:
-      - db
+      db: null
     depends_on:
       - db
     volumes:
@@ -77,8 +78,8 @@ services:
     restart: always
 
 networks:
+  app:
+    external: true
   db:
     driver: bridge
     internal: true
-  app:
-    driver: bridge
