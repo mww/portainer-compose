@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  drone:
+    image: drone/drone:2
+    networks:
+      app:
+        ipv4_address: 10.10.8.1
+      db: null
+    environment:
+      DRONE_GITHUB_CLIENT_ID: $DRONE_GITHUB_CLIENT_ID
+      DRONE_GITHUB_CLIENT_SECRET: $DRONE_GITHUB_CLIENT_SECRET
+      DRONE_RPC_SECRET: $DRONE_RPC_SECRET
+      DRONE_SERVER_HOST: $DRONE_SERVER_HOST
+      DRONE_SERVER_PROTO: https
+      DRONE_DATABASE_DRIVER: postgres
+      DRONE_DATABASE_DATASOURCE: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB?sslmode=disable
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:12-alpine
+    networks:
+      db: null
+    environment:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - $POSTGRES_DATA_DIR:/var/lib/postgresql/data
+    restart: always
+
+networks:
+  app:
+    external: true
+  db:
+    driver: bridge
+    internal: true
