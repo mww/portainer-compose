@@ -38,7 +38,7 @@ services:
     depends_on:
       - db
     volumes:
-      - $UMAMI_DB_BACKUP:/backup
+      - $DRONE_DB_BACKUP:/backup
     environment:
       - DB_TYPE=pgsql
       - DB_HOST=db
