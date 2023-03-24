@@ -2,7 +2,7 @@ version: '3'
 
 services:
   drone:
-    image: drone/drone:2
+    image: drone/drone:2.16.0
     networks:
       app:
         ipv4_address: 10.10.8.1
