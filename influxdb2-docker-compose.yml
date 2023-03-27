@@ -12,6 +12,8 @@ services:
   
   db-backup:
     image: tiredofit/db-backup:3.7.7
+    networks:
+      app: null
     depends_on:
       - app
     volumes:
