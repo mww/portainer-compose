@@ -23,7 +23,7 @@ services:
       - TZ=America/Los_Angeles
 
   db-backup:
-    image: tiredofit/db-backup:3.7.7
+    image: tiredofit/db-backup:3.8.4
     depends_on:
       - vaultwarden
     volumes:
