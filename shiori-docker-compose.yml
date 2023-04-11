@@ -1,0 +1,35 @@
+version: '3'
+services:
+  shiori:
+    image: ghcr.io/go-shiori/shiori:v1.5.4
+    networks:
+      app:
+        ipv4_address: 10.10.9.1
+    volumes:
+      - $SHIORI_DIR:/shiori
+      - $SHIORI_ARCHIVE_DIR:/shiori/archive
+    restart: always
+  
+  db-backup:
+    image: tiredofit/db-backup:3.8.4
+    depends_on:
+      - shiori
+    volumes:
+      - $SHIORI_DB_BACKUP:/backup
+      - $SHIORI_DIR:/data:ro
+    environment:
+      - DB_TYPE=sqlite3
+      - DB_HOST=/data/shiori.db
+      - DB_NAME=ALL
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0220        # backup at 2:20am
+      - DB_CLEANUP_TIME=50400     # keep 5 weeks of backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
+    restart: always
+
+networks:
+  app:
+    external: true
