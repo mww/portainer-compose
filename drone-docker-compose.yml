@@ -2,7 +2,7 @@ version: '3'
 
 services:
   drone:
-    image: drone/drone:2.16.0
+    image: drone/drone:2.17.0
     networks:
       app:
         ipv4_address: 10.10.8.1
@@ -32,7 +32,7 @@ services:
     restart: always
   
   db-backup:
-    image: tiredofit/db-backup:3.8.4
+    image: tiredofit/db-backup:3.9.0
     networks:
       db: null
     depends_on:
