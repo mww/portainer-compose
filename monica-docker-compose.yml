@@ -86,7 +86,7 @@ services:
     restart: always
   
   db-backup:
-    image: tiredofit/db-backup:3.8.4
+    image: tiredofit/db-backup:3.9.0
     networks:
       db: null
     depends_on:
