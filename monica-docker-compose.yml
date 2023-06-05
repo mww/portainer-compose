@@ -86,7 +86,7 @@ services:
     restart: always
   
   db-backup:
-    image: tiredofit/db-backup:3.9.0
+    image: ghcr.io/tiredofit/docker-db-backup:3.9.1
     networks:
       db: null
     depends_on:
