@@ -11,7 +11,7 @@ services:
     restart: always
   
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:3.9.2
+    image: ghcr.io/tiredofit/docker-db-backup:3.9.1
     depends_on:
       - shiori
     volumes:
