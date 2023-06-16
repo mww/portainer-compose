@@ -1,0 +1,63 @@
+version: "3.4"
+services:
+  broker:
+    image: docker.io/library/redis:7.0.11-alpine
+    networks:
+      db: null
+    volumes:
+      - $PAPERLESS_DIR/redisdata:/data
+    restart: always
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.14.5
+    networks:
+      app:
+        ipv4_address: 10.10.10.1
+      db: null
+    depends_on:
+      - broker
+    volumes:
+      - $PAPERLESS_DIR/data:/usr/src/paperless/data
+      - $PAPERLESS_DIR/media:/usr/src/paperless/media
+      - $PAPERLESS_DIR/export:/usr/src/paperless/export
+      - $PAPERLESS_DIR/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DATE_ORDER: MDY
+      PAPERLESS_TIME_ZONE: America/Los_Angeles
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_SECRET_KEY: $PAPERLESS_SECRET_KEY
+      PAPERLESS_URL: $PAPERLESS_URL
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  db-backup:
+    image: ghcr.io/tiredofit/docker-db-backup:3.9.1
+    depends_on:
+      - webserver
+    volumes:
+      - $PAPERLESS_DB_BACKUP:/backup
+      - $PAPERLESS_DIR/data:/data:ro
+    environment:
+      - DB_TYPE=sqlite3
+      - DB_HOST=/data/db.sqlite3
+      - DB_NAME=ALL
+      - DB_DUMP_FREQ=10080        # backup once a week
+      - DB_DUMP_BEGIN=0220        # backup at 2:20am
+      - DB_CLEANUP_TIME=100800    # keep 10 weeks of backups
+      - CHECKSUM=SHA1
+      - COMPRESSION=GZ
+      - SPLIT_DB=FALSE
+      - CONTAINER_ENABLE_MONITORING=FALSE
+    restart: always
+
+networks:
+  app:
+    external: true
+  db:
+    driver: bridge
+    internal: true
