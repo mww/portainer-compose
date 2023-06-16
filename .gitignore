@@ -1,0 +1,2 @@
+# Prevent checking in environment files.
+*.env
