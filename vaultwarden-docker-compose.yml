@@ -2,7 +2,7 @@ version: '3'
 
 services:
   vaultwarden:
-    image: ghcr.io/dani-garcia/vaultwarden:1.29.0-alpine
+    image: ghcr.io/dani-garcia/vaultwarden:1.29.1-alpine
     restart: always
     volumes:
       - $VAULTWARDEN_DATA:/data
