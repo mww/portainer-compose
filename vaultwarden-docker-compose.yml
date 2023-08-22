@@ -23,7 +23,7 @@ services:
       - TZ=America/Los_Angeles
 
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:3.9.1
+    image: ghcr.io/tiredofit/docker-db-backup:3.9.9
     depends_on:
       - vaultwarden
     volumes:

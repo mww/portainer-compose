@@ -9,7 +9,7 @@ services:
     restart: always
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:1.17.0
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.17.1
     networks:
       app:
         ipv4_address: 10.10.10.1
@@ -36,7 +36,7 @@ services:
     restart: always
 
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:3.9.1
+    image: ghcr.io/tiredofit/docker-db-backup:3.9.9
     networks:
       db: null
     depends_on:
