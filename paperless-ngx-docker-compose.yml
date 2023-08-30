@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   broker:
-    image: docker.io/library/redis:7.0.11-alpine
+    image: docker.io/library/redis:7-alpine
     networks:
       db: null
     volumes:
@@ -9,7 +9,7 @@ services:
     restart: always
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:1.17.1
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.17.3
     networks:
       app:
         ipv4_address: 10.10.10.1
