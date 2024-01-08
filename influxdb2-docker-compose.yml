@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   app:
-    image: influxdb:2.7.3
+    image: influxdb:2.7.5
     networks:
       app:
         ipv4_address: 10.10.1.1
@@ -11,7 +11,7 @@ services:
     restart: always
   
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:3.11.1
+    image: ghcr.io/tiredofit/docker-db-backup:latest
     networks:
       app: null
     depends_on:
