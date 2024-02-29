@@ -2,7 +2,7 @@
 version: '3'
 services:
   umami:
-    image: docker.umami.dev/umami-software/umami:postgresql-v2.9.0
+    image: docker.umami.dev/umami-software/umami:postgresql-v2.10.0
     networks:
       app:
         ipv4_address: 10.10.4.1
@@ -28,7 +28,7 @@ services:
     restart: always
 
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:4.0.32
+    image: ghcr.io/tiredofit/docker-db-backup:latest
     networks:
       db: null
     depends_on:

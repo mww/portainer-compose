@@ -9,7 +9,7 @@ services:
     restart: always
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.5.1
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.5.4
     networks:
       app:
         ipv4_address: 10.10.10.1
