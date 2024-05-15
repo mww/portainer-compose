@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   app:
-    image: monica:4.0.0-apache
+    image: monica:4.1.2-apache
     depends_on:
       - db
     environment:
@@ -54,7 +54,7 @@ services:
     restart: always
 
   cron:
-    image: monica:4.0.0-apache
+    image: monica:4.1.2-apache
     command: cron.sh
     depends_on:
       - db
@@ -86,7 +86,7 @@ services:
     restart: always
   
   db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:3.9.9
+    image: ghcr.io/tiredofit/docker-db-backup:latest
     networks:
       db: null
     depends_on:
