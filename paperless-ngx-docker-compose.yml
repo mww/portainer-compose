@@ -9,7 +9,7 @@ services:
     restart: always
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.9.0
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.11.2
     networks:
       app:
         ipv4_address: 10.10.10.1
@@ -39,24 +39,23 @@ services:
 
   db-backup:
     image: ghcr.io/tiredofit/docker-db-backup:latest
-    networks:
-      db: null
     depends_on:
       - webserver
     volumes:
       - $PAPERLESS_DB_BACKUP:/backup
       - $PAPERLESS_DIR/data:/data:ro
     environment:
-      - DB_TYPE=sqlite3
-      - DB_HOST=/data/db.sqlite3
-      - DB_NAME=ALL
-      - DB_DUMP_FREQ=10080        # backup once a week
-      - DB_DUMP_BEGIN=0220        # backup at 2:20am
-      - DB_CLEANUP_TIME=100800    # keep 10 weeks of backups
-      - CHECKSUM=SHA1
-      - COMPRESSION=GZ
-      - SPLIT_DB=FALSE
       - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0230     # backup at 2:30am
+      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+
+      - DB01_TYPE=sqlite3
+      - DB01_HOST=/data/db.sqlite3
+      - DB01_NAME=ALL
     restart: always
 
 networks:

@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   app:
-    image: influxdb:2.7.6
+    image: influxdb:2.7.8
     networks:
       app:
         ipv4_address: 10.10.1.1
@@ -19,19 +19,20 @@ services:
     volumes:
       - $INFLUXDB_DB_BACKUP:/backup
     environment:
-      - DB_TYPE=influx
-      - DB_HOST=http://app
-      - DB_NAME=ALL
-      - DB_USER=$INFLUXDB_ORG
-      - DB_PASS=$INFLUXDB_TOKEN
-      - DB_DUMP_FREQ=10080        # backup once a week
-      - DB_DUMP_BEGIN=0415        # backup at 4:15am
-      - DB_CLEANUP_TIME=100800    # keep 10 weeks of backups
-      - INFLUX_VERSION=2
-      - CHECKSUM=SHA1
-      - COMPRESSION=GZ
-      - SPLIT_DB=FALSE
       - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0415     # backup at 4:15am
+      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+
+      - DB01_TYPE=influx
+      - DB01_HOST=http://app
+      - DB01_NAME=ALL
+      - DB01_USER=$INFLUXDB_ORG
+      - DB01_PASS=$INFLUXDB_TOKEN
+      - DB01_INFLUX_VERSION=2
     restart: always
 
 networks:
