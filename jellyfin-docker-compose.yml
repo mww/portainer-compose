@@ -1,0 +1,49 @@
+version: '3.5'
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.9.9
+    container_name: jellyfin
+    networks:
+      app:
+        ipv4_address: 10.10.11.1
+    ports:
+      - 8096:8096
+      - 7359:7359/udp
+    environment:
+      - TZ=America/Los_Angeles
+    volumes:
+      - $JELLYFIN_DIR/config:/config
+      - $JELLYFIN_DIR/config/cache:/cache
+      - $MEDIA_DIR/shows:/media/shows
+      - $MEDIA_DIR/movies:/media/movies
+      - $MEDIA_DIR/home movies:/media/home-movies
+      - $MEDIA_DIR/music:/media/music
+      - $MEDIA_DIR/movie-experiments:/media/movie-experiments
+    restart: 'unless-stopped'
+
+  db-backup-jellyfin:
+    image: ghcr.io/tiredofit/docker-db-backup:latest
+    volumes:
+      - $JELLYFIN_DIR/config/data:/data:ro
+      - $BACKUP_DIR:/backup
+    environment:
+      - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0220     # backup at 2:20am
+      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+
+      - DB01_TYPE=sqlite3
+      - DB01_HOST=/data/jellyfin.db
+      - DB01_NAME=ALL
+
+      - DB02_TYPE=sqlite3
+      - DB02_HOST=/data/library.db
+      - DB02_NAME=ALL
+    restart: always
+    
+networks:
+  app:
+    external: true
