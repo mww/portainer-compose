@@ -13,7 +13,7 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - $JELLYFIN_DIR/config:/config
-      - $JELLYFIN_DIR/config/cache:/cache
+      - $JELLYFIN_DIR/cache:/cache
       - $MEDIA_DIR/shows:/media/shows
       - $MEDIA_DIR/movies:/media/movies
       - $MEDIA_DIR/home movies:/media/home-movies
