@@ -42,7 +42,7 @@ services:
       - DB02_TYPE=sqlite3
       - DB02_HOST=/data/library.db
       - DB02_NAME=ALL
-    restart: always
+    restart: 'unless-stopped'
     
 networks:
   app:

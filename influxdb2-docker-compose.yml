@@ -2,13 +2,13 @@ version: "3.4"
 
 services:
   app:
-    image: influxdb:2.7.9
+    image: influxdb:2.7.10
     networks:
       app:
         ipv4_address: 10.10.1.1
     volumes:
       - $INFLUXDB_DIR:/var/lib/influxdb2
-    restart: always
+    restart: 'unless-stopped'
   
   db-backup:
     image: ghcr.io/tiredofit/docker-db-backup:latest
@@ -33,7 +33,7 @@ services:
       - DB01_USER=$INFLUXDB_ORG
       - DB01_PASS=$INFLUXDB_TOKEN
       - DB01_INFLUX_VERSION=2
-    restart: always
+    restart: 'unless-stopped'
 
 networks:
   app:
