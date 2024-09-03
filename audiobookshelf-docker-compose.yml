@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:2.13.3
+    networks:
+      app:
+        ipv4_address: 10.10.12.1
+    volumes:
+      - $MEDIA_DIR/audiobooks:/audiobooks
+      - $MEDIA_DIR/podcasts:/podcasts
+      - $ABS_DIR/config:/config
+      - $ABS_DIR/metadata:/metadata
+    environment:
+      - TZ=America/Los_Angeles
+    restart: 'unless-stopped'
+
+  db-backup-audiobookshelf:
+    image: ghcr.io/tiredofit/docker-db-backup:latest
+
+    volumes:
+      - $ABS_DIR/config:/data:ro
+      - $BACKUP_DIR:/backup
+    environment:
+      - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0225     # backup at 2:25am
+      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+
+      - DB01_TYPE=sqlite3
+      - DB01_HOST=/data/absdatabase.sqlite
+      - DB01_NAME=ALL
+
+    restart: 'unless-stopped'
+
+networks:
+  app:
+    external: true
