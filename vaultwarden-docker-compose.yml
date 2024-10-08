@@ -2,7 +2,7 @@ version: '3'
 
 services:
   vaultwarden:
-    image: ghcr.io/dani-garcia/vaultwarden:1.32.0-alpine
+    image: ghcr.io/dani-garcia/vaultwarden:1.32.1-alpine
     restart: always
     volumes:
       - $VAULTWARDEN_DATA:/data
@@ -21,6 +21,11 @@ services:
       - SMTP_USERNAME=$SMTP_USER
       - SMTP_PASSWORD=$SMTP_PASSWORD
       - TZ=America/Los_Angeles
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1/alive"]
+      interval: 1m
+      timeout: 3s
+      start_period: 10s
 
   db-backup:
     image: ghcr.io/tiredofit/docker-db-backup:latest
