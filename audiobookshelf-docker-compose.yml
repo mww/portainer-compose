@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   audiobookshelf:
-    image: ghcr.io/advplyr/audiobookshelf:2.13.4
+    image: ghcr.io/advplyr/audiobookshelf:2.14.0
     networks:
       app:
         ipv4_address: 10.10.12.1
@@ -13,6 +13,11 @@ services:
       - $ABS_DIR/metadata:/metadata
     environment:
       - TZ=America/Los_Angeles
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://127.0.0.1/healthcheck"]
+      interval: 1m
+      timeout: 3s
+      start_period: 10s
     restart: 'unless-stopped'
 
   db-backup-audiobookshelf:

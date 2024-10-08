@@ -1,7 +1,7 @@
 version: '3'
 services:
   shiori:
-    image: ghcr.io/go-shiori/shiori:v1.7.0
+    image: ghcr.io/go-shiori/shiori:v1.7.1
     networks:
       app:
         ipv4_address: 10.10.9.1
@@ -18,16 +18,17 @@ services:
       - $SHIORI_DB_BACKUP:/backup
       - $SHIORI_DIR:/data:ro
     environment:
-      - DB_TYPE=sqlite3
-      - DB_HOST=/data/shiori.db
-      - DB_NAME=ALL
-      - DB_DUMP_FREQ=10080        # backup once a week
-      - DB_DUMP_BEGIN=0220        # backup at 2:20am
-      - DB_CLEANUP_TIME=50400     # keep 5 weeks of backups
-      - CHECKSUM=SHA1
-      - COMPRESSION=GZ
-      - SPLIT_DB=FALSE
       - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0220     # backup at 2:20am
+      - DEFAULT_CLEANUP_TIME=50400    # keep 5 weeks of backups
+
+      - DB01_TYPE=sqlite3
+      - DB01_HOST=/data/shiori.db
+      - DB01_NAME=ALL
     restart: always
 
 networks:
