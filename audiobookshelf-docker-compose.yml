@@ -14,7 +14,7 @@ services:
     environment:
       - TZ=America/Los_Angeles
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://127.0.0.1/healthcheck"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1/healthcheck"]
       interval: 1m
       timeout: 3s
       start_period: 10s
