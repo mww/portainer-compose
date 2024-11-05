@@ -57,8 +57,10 @@ services:
 
   db-backup:
     image: ghcr.io/tiredofit/docker-db-backup:latest
+    networks:
+      db: null
     depends_on:
-      - webserver
+      - postgres
     volumes:
       - $PAPERLESS_DB_BACKUP:/backup
       - $PAPERLESS_DIR/data:/data:ro
