@@ -9,6 +9,7 @@ services:
   
   postgres:
     image: docker.io/library/postgres:17-alpine
+    command: "sh -c crond && postgres"
     networks:
       db: null
     restart: unless-stopped
@@ -36,6 +37,7 @@ services:
       db: null
     depends_on:
       - broker
+      - postgres
     volumes:
       - $PAPERLESS_DIR/data:/usr/src/paperless/data
       - $PAPERLESS_DIR/media:/usr/src/paperless/media
@@ -58,6 +60,7 @@ services:
       retries: 5
     restart: always
 
+  # reenable once db-backup supports postgres 17
   #db-backup:
   #  image: ghcr.io/tiredofit/docker-db-backup:latest
   #  networks:
