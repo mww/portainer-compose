@@ -14,7 +14,10 @@ services:
     restart: unless-stopped
     volumes:
       - $PAPERLESS_DIR/pgdata:/var/lib/postgresql/data
+      - $PAPERLESS_DIR/backup-postgres:/etc/periodic/daily/backup-postgres
+      - $PAPERLESS_DB_BACKUP:/backup
     environment:
+      TZ: America/Los_Angeles
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
@@ -55,30 +58,30 @@ services:
       retries: 5
     restart: always
 
-  db-backup:
-    image: ghcr.io/tiredofit/docker-db-backup:latest
-    networks:
-      db: null
-    depends_on:
-      - postgres
-    volumes:
-      - $PAPERLESS_DB_BACKUP:/backup
-      - $PAPERLESS_DIR/data:/data:ro
-    environment:
-      - CONTAINER_ENABLE_MONITORING=FALSE
-      - TZ=America/Los_Angeles
-      - DEFAULT_CHECKSUM=SHA1
-      - DEFAULT_COMPRESSION=GZ
-      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
-      - DEFAULT_BACKUP_BEGIN=0230     # backup at 2:30am
-      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
-
-      - DB01_TYPE=pgsql
-      - DB01_HOST=postgres
-      - DB01_NAME=paperless
-      - DB01_USER=paperless
-      - DB01_PASS=$POSTGRES_PASSWORD
-    restart: always
+  #db-backup:
+  #  image: ghcr.io/tiredofit/docker-db-backup:latest
+  #  networks:
+  #    db: null
+  #  depends_on:
+  #    - postgres
+  #  volumes:
+  #    - $PAPERLESS_DB_BACKUP:/backup
+  #    - $PAPERLESS_DIR/data:/data:ro
+  #  environment:
+  #    - CONTAINER_ENABLE_MONITORING=FALSE
+  #    - TZ=America/Los_Angeles
+  #    - DEFAULT_CHECKSUM=SHA1
+  #    - DEFAULT_COMPRESSION=GZ
+  #    - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+  #    - DEFAULT_BACKUP_BEGIN=0230     # backup at 2:30am
+  #    - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+  #
+  #    - DB01_TYPE=pgsql
+  #    - DB01_HOST=postgres
+  #    - DB01_NAME=paperless
+  #    - DB01_USER=paperless
+  #    - DB01_PASS=$POSTGRES_PASSWORD
+  #  restart: always
 
 networks:
   app:
