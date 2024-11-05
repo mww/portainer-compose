@@ -39,7 +39,8 @@ services:
       - $PAPERLESS_DB_BACKUP:/backup
     environment:
       TZ: America/Los_Angeles
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      PGPASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_USER: paperless
 
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:2.13.4
