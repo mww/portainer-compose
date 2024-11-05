@@ -9,14 +9,11 @@ services:
   
   postgres:
     image: docker.io/library/postgres:17-alpine
-    command: "sh -c crond && postgres"
     networks:
       db: null
     restart: unless-stopped
     volumes:
       - $PAPERLESS_DIR/pgdata:/var/lib/postgresql/data
-      - $PAPERLESS_DIR/backup-postgres:/etc/periodic/daily/backup-postgres
-      - $PAPERLESS_DB_BACKUP:/backup
     environment:
       TZ: America/Los_Angeles
       POSTGRES_DB: paperless
@@ -28,6 +25,21 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+  
+  postgres-backup:
+    image: docker.io/library/postgres:17-alpine
+    command: "crond -f"
+    networks:
+      db: null
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - $PAPERLESS_DIR/backup-postgres:/etc/periodic/daily/backup-postgres
+      - $PAPERLESS_DB_BACKUP:/backup
+    environment:
+      TZ: America/Los_Angeles
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:2.13.4
