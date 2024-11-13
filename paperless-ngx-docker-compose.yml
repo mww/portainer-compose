@@ -25,25 +25,9 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-  
-  postgres-backup:
-    image: docker.io/library/postgres:17-alpine
-    command: "crond -f"
-    networks:
-      db: null
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    volumes:
-      - $PAPERLESS_DIR/backup-postgres:/etc/periodic/daily/backup-postgres
-      - $PAPERLESS_DB_BACKUP:/backup
-    environment:
-      TZ: America/Los_Angeles
-      PGPASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_USER: paperless
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.13.4
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.13.5
     networks:
       app:
         ipv4_address: 10.10.10.1
@@ -73,31 +57,30 @@ services:
       retries: 5
     restart: always
 
-  # reenable once db-backup supports postgres 17
-  #db-backup:
-  #  image: ghcr.io/tiredofit/docker-db-backup:latest
-  #  networks:
-  #    db: null
-  #  depends_on:
-  #    - postgres
-  #  volumes:
-  #    - $PAPERLESS_DB_BACKUP:/backup
-  #    - $PAPERLESS_DIR/data:/data:ro
-  #  environment:
-  #    - CONTAINER_ENABLE_MONITORING=FALSE
-  #    - TZ=America/Los_Angeles
-  #    - DEFAULT_CHECKSUM=SHA1
-  #    - DEFAULT_COMPRESSION=GZ
-  #    - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
-  #    - DEFAULT_BACKUP_BEGIN=0230     # backup at 2:30am
-  #    - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
-  #
-  #    - DB01_TYPE=pgsql
-  #    - DB01_HOST=postgres
-  #    - DB01_NAME=paperless
-  #    - DB01_USER=paperless
-  #    - DB01_PASS=$POSTGRES_PASSWORD
-  #  restart: always
+  db-backup:
+    image: ghcr.io/tiredofit/docker-db-backup:latest
+    networks:
+      db: null
+    depends_on:
+      - postgres
+    volumes:
+      - $PAPERLESS_DB_BACKUP:/backup
+      - $PAPERLESS_DIR/data:/data:ro
+    environment:
+      - CONTAINER_ENABLE_MONITORING=FALSE
+      - TZ=America/Los_Angeles
+      - DEFAULT_CHECKSUM=SHA1
+      - DEFAULT_COMPRESSION=GZ
+      - DEFAULT_BACKUP_INTERVAL=10080 # backup once a week
+      - DEFAULT_BACKUP_BEGIN=0230     # backup at 2:30am
+      - DEFAULT_CLEANUP_TIME=100800   # keep 10 weeks of backups
+  
+      - DB01_TYPE=pgsql
+      - DB01_HOST=postgres
+      - DB01_NAME=paperless
+      - DB01_USER=paperless
+      - DB01_PASS=$POSTGRES_PASSWORD
+    restart: always
 
 networks:
   app:
