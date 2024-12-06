@@ -77,7 +77,7 @@ services:
   
       - DB01_TYPE=pgsql
       - DB01_HOST=postgres
-      - DB01_NAME=paperless
+      - DB01_NAME=ALL
       - DB01_USER=paperless
       - DB01_PASS=$POSTGRES_PASSWORD
     restart: always
