@@ -1,7 +1,7 @@
 version: '3'
 services:
   shiori:
-    image: ghcr.io/go-shiori/shiori:v1.7.1
+    image: ghcr.io/go-shiori/shiori:v1.7.4
     networks:
       app:
         ipv4_address: 10.10.9.1
