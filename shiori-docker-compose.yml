@@ -1,4 +1,3 @@
-version: '3'
 services:
   shiori:
     image: ghcr.io/go-shiori/shiori:v1.7.4

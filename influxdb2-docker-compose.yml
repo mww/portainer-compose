@@ -1,5 +1,3 @@
-version: "3.4"
-
 services:
   app:
     image: influxdb:2.7.11
