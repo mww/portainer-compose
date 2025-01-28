@@ -27,7 +27,7 @@ services:
       start_period: 30s
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.13.5
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.14.6
     networks:
       app:
         ipv4_address: 10.10.10.1
