@@ -1,6 +1,6 @@
 services:
   audiobookshelf:
-    image: ghcr.io/advplyr/audiobookshelf:2.19.3
+    image: ghcr.io/advplyr/audiobookshelf:2.19.5
     networks:
       app:
         ipv4_address: 10.10.12.1

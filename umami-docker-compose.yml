@@ -1,7 +1,7 @@
 ---
 services:
   umami:
-    image: docker.umami.dev/umami-software/umami:postgresql-v2.15.1
+    image: docker.umami.dev/umami-software/umami:postgresql-v2.16.1
     networks:
       app:
         ipv4_address: 10.10.4.1
@@ -9,10 +9,15 @@ services:
     environment:
       DATABASE_URL: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/umami
       DATABASE_TYPE: postgresql
-      HASH_SALT: $HASH_SALT
+      APP_SECRET: $HASH_SALT
     depends_on:
       - db
     restart: 'unless-stopped'
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:3000/api/heartbeat"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
 
   db:
     image: postgres:15-alpine
@@ -25,6 +30,11 @@ services:
     volumes:
       - $POSTGRES_DATA_DIR:/var/lib/postgresql/data
     restart: 'unless-stopped'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
 
   db-backup:
     image: ghcr.io/tiredofit/docker-db-backup:latest
