@@ -14,6 +14,7 @@ services:
       - $JELLYFIN_DIR/config:/config
       - $JELLYFIN_DIR/cache:/cache
       - $MEDIA_DIR/shows:/media/shows
+      - $MEDIA_DIR/shows-experiments:/media/shows-experiments
       - $MEDIA_DIR/movies:/media/movies
       - $MEDIA_DIR/home movies:/media/home-movies
       - $MEDIA_DIR/music:/media/music
