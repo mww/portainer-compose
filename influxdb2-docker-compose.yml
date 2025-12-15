@@ -1,6 +1,6 @@
 services:
   app:
-    image: influxdb:2.7.12
+    image: influxdb:2.8.0
     networks:
       app:
         ipv4_address: 10.10.1.1
