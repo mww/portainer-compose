@@ -1,6 +1,6 @@
 services:
   vaultwarden:
-    image: ghcr.io/dani-garcia/vaultwarden:1.35.4-alpine
+    image: ghcr.io/dani-garcia/vaultwarden:1.36.0-alpine
     restart: always
     volumes:
       - $VAULTWARDEN_DATA:/data
